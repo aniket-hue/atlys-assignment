@@ -3,8 +3,8 @@ import { HeartIcon } from '@shared/icons/HeartIcon';
 import { SendIcon } from '@shared/icons/SendIcon';
 import { Avatar } from '@shared/ui/Avatar';
 
-import { memo } from 'react';
 import type React from 'react';
+import { memo } from 'react';
 
 const ActionButton = memo(function ActionButton({
   icon: IconComponent,

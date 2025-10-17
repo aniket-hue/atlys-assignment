@@ -43,7 +43,7 @@ export const LoginButton = memo(function LoginButton() {
 
       <SignupModal ref={signupModalRef} onLogin={handleLogin} />
 
-      {/* {!user && <div role="button" tabIndex={-1} className="fixed inset-0 z-[50]" onClick={handleOpenLoginModal} />} */}
+      {!user && <div role="button" tabIndex={-1} className="fixed inset-0 z-[50]" onClick={handleOpenLoginModal} />}
     </>
   );
 });

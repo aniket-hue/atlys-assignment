@@ -1,19 +1,20 @@
+import type { CreatePostData } from '@entities/posts/api/createPost';
+
 import { BoldIcon } from '@shared/icons/BoldIcon';
 import { BulletsIcon } from '@shared/icons/BulletsIcon';
 import { ItalicIcon } from '@shared/icons/ItalicIcon';
 import MicIcon from '@shared/icons/MicIcon';
+import OrderedListIcon from '@shared/icons/OrderedListIcon';
 import PlusIcon from '@shared/icons/PlusIcon';
 import PostIcon from '@shared/icons/PostIcon';
 import { SmileyIcon } from '@shared/icons/Smiley';
 import { UnderlineIcon } from '@shared/icons/UnderlineIcon';
 import VideoIcon from '@shared/icons/VideoIcon';
 import { cn } from '@shared/lib/cn';
+import { sleep } from '@shared/lib/sleep';
 import { useNotImplemented } from '@shared/utils/hooks/useNotImplemented';
 
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type { CreatePostData } from '@entities/posts/api/createPost';
-import OrderedListIcon from '@shared/icons/OrderedListIcon';
-import { sleep } from '@shared/lib/sleep';
 
 const EditorButton = memo(
   ({

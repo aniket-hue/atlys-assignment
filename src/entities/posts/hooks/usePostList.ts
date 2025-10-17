@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
+import { type CreatePostData, createPost } from '../api/createPost';
 import { getPost } from '../api/getPost';
-import { createPost, type CreatePostData } from '../api/createPost';
 import type { Post } from '../types';
 
 export function usePostList() {
