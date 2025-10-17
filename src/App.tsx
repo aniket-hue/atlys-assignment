@@ -8,14 +8,14 @@ import { usePostList } from '@entities/posts';
 import { useNotImplemented } from '@shared/utils/hooks/useNotImplemented';
 
 function App() {
-  const { posts, isLoading } = usePostList();
+  const { posts, isLoading, addPost } = usePostList();
   const { notImplemented } = useNotImplemented();
 
   return (
     <AuthProvider>
       <Header />
       <div className="flex flex-col items-center justify-center gap-4 max-w-[600px] mx-auto pb-4 pt-24 scrollbar-hide">
-        <PostEditor />
+        <PostEditor onAddPost={addPost} />
 
         <div className="flex flex-wrap flex-col items-center justify-center gap-4 w-full ">
           {isLoading

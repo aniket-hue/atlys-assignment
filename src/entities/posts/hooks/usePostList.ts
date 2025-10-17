@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getPost } from '../api/getPost';
+import { createPost, type CreatePostData } from '../api/createPost';
 import type { Post } from '../types';
 
 export function usePostList() {
@@ -24,5 +25,18 @@ export function usePostList() {
     }
   }
 
-  return { posts, isLoading, error };
+  async function addPost(data: CreatePostData) {
+    try {
+      /**
+       * Backend call to create a new post and optimistic update the UI
+       */
+
+      const newPost = await createPost(data);
+      setPosts((prevPosts) => [newPost, ...prevPosts]);
+    } catch (error) {
+      setError(error as Error);
+    }
+  }
+
+  return { posts, isLoading, error, addPost };
 }

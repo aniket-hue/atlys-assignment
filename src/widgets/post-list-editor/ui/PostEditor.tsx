@@ -11,6 +11,7 @@ import { cn } from '@shared/lib/cn';
 import { useNotImplemented } from '@shared/utils/hooks/useNotImplemented';
 
 import { useEffect, useRef, useState } from 'react';
+import type { CreatePostData } from '@entities/posts/api/createPost';
 
 const EditorButton = ({ icon: Icon, isActive, onClick }: { icon: any; isActive: boolean; onClick: () => void }) => {
   return (
@@ -26,10 +27,15 @@ const EditorButton = ({ icon: Icon, isActive, onClick }: { icon: any; isActive: 
   );
 };
 
-export function PostEditor() {
+interface PostEditorProps {
+  onAddPost?: (data: CreatePostData) => void;
+}
+
+export function PostEditor({ onAddPost }: PostEditorProps) {
   const [format, setFormat] = useState<'bold' | 'italic' | 'underline' | null>(null);
   const [listType, setListType] = useState<'ordered' | 'unordered' | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [content, setContent] = useState('');
 
   const { notImplemented } = useNotImplemented();
 
@@ -50,6 +56,23 @@ export function PostEditor() {
       document.removeEventListener('click', handleClick);
     };
   }, [isExpanded]);
+
+  function handleSubmit() {
+    if (!content.trim() || !onAddPost) {
+      return;
+    }
+
+    onAddPost({ content: content.trim() });
+    setContent('');
+    setIsExpanded(false);
+  }
+
+  function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
+    if (e.key === 'Enter' && e.shiftKey) {
+      e.preventDefault();
+      handleSubmit();
+    }
+  }
 
   return (
     <div className="bg-gray-50 rounded-3xl p-2 w-full max-w-2xl mx-auto" ref={editorRef}>
@@ -114,6 +137,9 @@ export function PostEditor() {
               },
             )}
             placeholder="What's on your mind?"
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            onKeyDown={handleKeyDown}
           />
         </div>
 
@@ -145,8 +171,14 @@ export function PostEditor() {
             'bottom-2': isExpanded,
             'bottom-1/2 translate-y-1/2': !isExpanded,
           })}
+          onClick={handleSubmit}
+          disabled={!content.trim()}
         >
-          <PostIcon width={24} height={24} className="text-violet-800" />
+          <PostIcon
+            width={24}
+            height={24}
+            className={cn('transition-colors duration-200', content.trim() ? 'text-violet-800' : 'text-gray-400')}
+          />
         </button>
       </div>
     </div>

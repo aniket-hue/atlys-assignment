@@ -45,7 +45,7 @@ export function LoginButton() {
         }}
       />
 
-      {/* {!user && <div role="button" tabIndex={-1} className="fixed inset-0 z-[50]" onClick={handleOpenLoginModal} />} */}
+      {!user && <div role="button" tabIndex={-1} className="fixed inset-0 z-[50]" onClick={handleOpenLoginModal} />}
     </>
   );
 }
