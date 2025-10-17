@@ -6,7 +6,7 @@ import { SmileyIcon } from '@shared/icons/Smiley';
 import { UnderlineIcon } from '@shared/icons/UnderlineIcon';
 import { cn } from '@shared/lib/cn';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const EditorButton = ({ icon: Icon, isActive, onClick }: { icon: any; isActive: boolean; onClick: () => void }) => {
   return (
@@ -27,8 +27,26 @@ export function PostEditor() {
   const [listType, setListType] = useState<'ordered' | 'unordered' | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
 
+  const editorRef = useRef<HTMLDivElement>(null);
+
+  function handleClick(e: MouseEvent) {
+    if (e.target instanceof Node && editorRef.current?.contains(e.target)) {
+      setIsExpanded(true);
+    } else {
+      setIsExpanded(false);
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener('click', handleClick);
+
+    return () => {
+      document.removeEventListener('click', handleClick);
+    };
+  }, [isExpanded]);
+
   return (
-    <div className="bg-gray-50 rounded-3xl p-2 w-full max-w-2xl mx-auto ">
+    <div className="bg-gray-50 rounded-3xl p-2 w-full max-w-2xl mx-auto" ref={editorRef}>
       <div
         className={cn(
           'rounded-2xl bg-white w-full border border-gray-200 group',
@@ -90,8 +108,6 @@ export function PostEditor() {
               },
             )}
             placeholder="What's on your mind?"
-            onFocus={() => setIsExpanded(true)}
-            onBlur={() => setIsExpanded(false)}
           />
         </div>
 

@@ -5,12 +5,21 @@ import { Avatar } from '@shared/ui/Avatar';
 
 import type React from 'react';
 
-function ActionButton({ icon: IconComponent, label }: { icon: React.ComponentType<any>; label: string }) {
+function ActionButton({
+  icon: IconComponent,
+  label,
+  onClick,
+}: {
+  icon: React.ComponentType<any>;
+  label: string;
+  onClick: () => void;
+}) {
   return (
     <button
       type="button"
       className="group relative rounded-full transition-all duration-200 ease-in-out active:scale-90 cursor-pointer"
       aria-label={label}
+      onClick={onClick}
     >
       <IconComponent className="size-5.5 transition-all duration-200 ease-in-out filter group-hover:scale-110 group-hover:brightness-125" />
     </button>
@@ -23,9 +32,15 @@ interface PostCardProps {
   name: string;
   createdAt: string;
   emoji: string;
+
+  onLike: () => void;
+  onComment: () => void;
+  onSend: () => void;
 }
 
 export function PostCard(props: PostCardProps) {
+  const { onLike, onComment, onSend } = props;
+
   return (
     <div className="bg-snow rounded-3xl p-2 w-full">
       <div className="rounded-2xl bg-white w-full h-full border border-gray-200 text-gray-800 p-3 shadow-sm transition-shadow hover:shadow-md">
@@ -46,9 +61,9 @@ export function PostCard(props: PostCardProps) {
       </div>
 
       <div className="flex items-center gap-6 ml-4 mt-3">
-        <ActionButton icon={HeartIcon} label="Like" />
-        <ActionButton icon={CommentIcon} label="Comment" />
-        <ActionButton icon={SendIcon} label="Send" />
+        <ActionButton icon={HeartIcon} label="Like" onClick={onLike} />
+        <ActionButton icon={CommentIcon} label="Comment" onClick={onComment} />
+        <ActionButton icon={SendIcon} label="Send" onClick={onSend} />
       </div>
     </div>
   );

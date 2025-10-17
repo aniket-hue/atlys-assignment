@@ -1,0 +1,90 @@
+/** biome-ignore-all lint/correctness/useUniqueElementIds: <explanation> */
+
+import { Input } from '@shared/ui/input';
+import { Label } from '@shared/ui/Label';
+import { Modal, ModalContent, ModalOverlay } from '@shared/ui/modal';
+import { Slot } from '@shared/ui/slot';
+
+import { useState } from 'react';
+
+export function SignupModal() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+  };
+
+  const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setConfirmPassword(e.target.value);
+  };
+
+  return (
+    <Modal>
+      <ModalOverlay />
+      <ModalContent>
+        {/* Header */}
+        <div className="text-center">
+          <p className="text-base font-semibold mb-1 text-neutral-800">Create an account or log in to continue</p>
+          <p className="text-xs text-neutral-600">Create an account to access all the features on the app</p>
+        </div>
+
+        <div className="flex flex-col gap-4 mt-8">
+          <div>
+            <Label htmlFor="email">Email or username</Label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="Email or username"
+              className="w-full mt-1"
+              onChange={handleEmailChange}
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
+              type="password"
+              placeholder="Enter your password"
+              className="w-full mt-1"
+              onChange={handlePasswordChange}
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="confirm-password">Confirm Password</Label>
+            <Input
+              id="confirm-password"
+              type="password"
+              placeholder="Re-enter your password"
+              className="w-full mt-1"
+              onChange={handleConfirmPasswordChange}
+            />
+          </div>
+        </div>
+
+        <button
+          type="button"
+          className="w-full bg-violet-800 text-white py-2.5 rounded-lg font-medium 
+          hover:bg-violet-900 transition-colors mt-4 text-xs cursor-pointer"
+        >
+          Create Account
+        </button>
+
+        <Slot name="footer">
+          <div className="py-2">
+            <p className="text-xs text-neutral-600 text-center">
+              Already have an account? <span className="text-violet-800 cursor-pointer">Log in</span>
+            </p>
+          </div>
+        </Slot>
+      </ModalContent>
+    </Modal>
+  );
+}
