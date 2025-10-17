@@ -1,13 +1,11 @@
+import { AuthProvider } from '@widgets/auth';
 import { Header } from '@widgets/header';
 import { PostCard, PostCardShimmer } from '@widgets/post-list';
 import { PostEditor } from '@widgets/post-list-editor';
 
-import { SignupModal } from '@features/sign-up/ui/SignupModal';
-
 import { usePostList } from '@entities/posts';
 
 import { useNotImplemented } from '@shared/utils/hooks/useNotImplemented';
-import { AuthProvider } from '@widgets/auth';
 
 function App() {
   const { posts, isLoading } = usePostList();

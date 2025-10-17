@@ -1,10 +1,14 @@
 import { BoldIcon } from '@shared/icons/BoldIcon';
 import { BulletsIcon } from '@shared/icons/BulletsIcon';
 import { ItalicIcon } from '@shared/icons/ItalicIcon';
+import MicIcon from '@shared/icons/MicIcon';
+import PlusIcon from '@shared/icons/PlusIcon';
 import PostIcon from '@shared/icons/PostIcon';
 import { SmileyIcon } from '@shared/icons/Smiley';
 import { UnderlineIcon } from '@shared/icons/UnderlineIcon';
+import VideoIcon from '@shared/icons/VideoIcon';
 import { cn } from '@shared/lib/cn';
+import { useNotImplemented } from '@shared/utils/hooks/useNotImplemented';
 
 import { useEffect, useRef, useState } from 'react';
 
@@ -26,6 +30,8 @@ export function PostEditor() {
   const [format, setFormat] = useState<'bold' | 'italic' | 'underline' | null>(null);
   const [listType, setListType] = useState<'ordered' | 'unordered' | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
+
+  const { notImplemented } = useNotImplemented();
 
   const editorRef = useRef<HTMLDivElement>(null);
 
@@ -119,7 +125,17 @@ export function PostEditor() {
         >
           <div className="overflow-hidden">
             <div className="h-px w-full bg-gray-200" />
-            <div className="flex items-center p-3 h-10"></div>
+
+            <div
+              role="button"
+              tabIndex={-1}
+              className="flex items-center p-3 h-10 gap-3 cursor-pointer"
+              onClick={notImplemented}
+            >
+              <PlusIcon className="text-neutral-500" width={16} height={16} />
+              <VideoIcon className="text-neutral-500" width={16} height={16} />
+              <MicIcon className="text-neutral-500" width={16} height={16} />
+            </div>
           </div>
         </div>
 

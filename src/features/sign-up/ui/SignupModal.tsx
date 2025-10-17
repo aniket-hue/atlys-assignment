@@ -1,16 +1,25 @@
 /** biome-ignore-all lint/correctness/useUniqueElementIds: <explanation> */
 
+import { useAuth } from '@widgets/auth/model/ctx';
+
+import { validateEmail, validatePassword } from '@shared/lib/validate';
 import { Input } from '@shared/ui/input';
 import { Label } from '@shared/ui/Label';
 import { Modal, ModalContent, ModalOverlay, type ModalRef } from '@shared/ui/modal';
 import { Slot } from '@shared/ui/slot';
 
-import { forwardRef, useState } from 'react';
+import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 
 export const SignupModal = forwardRef<ModalRef, { onLogin: () => void }>(({ onLogin }, ref) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+
+  const modalRef = useRef<ModalRef>(null);
+
+  useImperativeHandle(ref, () => modalRef.current!);
+
+  const { signup } = useAuth();
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -28,8 +37,29 @@ export const SignupModal = forwardRef<ModalRef, { onLogin: () => void }>(({ onLo
     onLogin();
   };
 
+  const handleSignup = () => {
+    if (password !== confirmPassword) {
+      throw new Error('Passwords do not match');
+    }
+
+    if (!validateEmail(email)) {
+      throw new Error('Invalid email');
+    }
+
+    if (!validatePassword(password)) {
+      throw new Error('Invalid password');
+    }
+
+    try {
+      signup({ email, password });
+      modalRef.current?.close();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
-    <Modal ref={ref}>
+    <Modal ref={modalRef}>
       <ModalOverlay />
       <ModalContent>
         {/* Header */}
@@ -77,6 +107,7 @@ export const SignupModal = forwardRef<ModalRef, { onLogin: () => void }>(({ onLo
           type="button"
           className="w-full bg-violet-800 text-white py-2.5 rounded-lg font-medium 
           hover:bg-violet-900 transition-colors mt-4 text-xs cursor-pointer"
+          onClick={handleSignup}
         >
           Create Account
         </button>

@@ -1,5 +1,7 @@
 /** biome-ignore-all lint/correctness/useUniqueElementIds: <explanation> */
 
+import { useAuth } from '@widgets/auth/model/ctx';
+
 import { Input } from '@shared/ui/input';
 import { Label } from '@shared/ui/Label';
 import { Modal, ModalContent, ModalOverlay } from '@shared/ui/modal';
@@ -7,19 +9,18 @@ import type { ModalRef } from '@shared/ui/modal/types';
 import { Slot } from '@shared/ui/slot';
 
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
-import { useAuth } from '@widgets/auth/model/ctx';
 
 export const LoginModal = forwardRef<ModalRef, { onSignup: () => void }>(({ onSignup }, ref) => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { login, ...rest } = useAuth();
+  const { login } = useAuth();
 
   const modalRef = useRef<ModalRef>(null);
 
   useImperativeHandle(ref, () => modalRef.current!);
 
-  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUsername(e.target.value);
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -28,11 +29,10 @@ export const LoginModal = forwardRef<ModalRef, { onSignup: () => void }>(({ onSi
 
   const handleLogin = () => {
     try {
-      console.log(login);
-      login({ email: username, password, username });
+      login({ email, password });
       modalRef.current?.close();
     } catch (error) {
-      console.error(error);
+      console.error('Login failed:', error);
     }
   };
 
@@ -52,13 +52,13 @@ export const LoginModal = forwardRef<ModalRef, { onSignup: () => void }>(({ onSi
 
         <div className="flex flex-col gap-4 mt-8">
           <div>
-            <Label htmlFor="email">Email or username</Label>
+            <Label htmlFor="email">Email</Label>
             <Input
               id="email"
               type="email"
-              placeholder="Email or username"
+              placeholder="Enter your email"
               className="w-full mt-1"
-              onChange={handleUsernameChange}
+              onChange={handleEmailChange}
             />
           </div>
 

@@ -19,10 +19,14 @@ export function LoginButton() {
     }
   }
 
+  function handleOpenLoginModal() {
+    loginModalRef.current?.open();
+  }
+
   return (
     <>
       <button type="button" onClick={handleAction} className="text-sm text-violet-800 cursor-pointer font-medium">
-        {user ? 'Back to home' : 'Login'}
+        {user ? 'Logout' : 'Login'}
       </button>
 
       <LoginModal
@@ -40,6 +44,8 @@ export function LoginButton() {
           loginModalRef.current?.open();
         }}
       />
+
+      {/* {!user && <div role="button" tabIndex={-1} className="fixed inset-0 z-[50]" onClick={handleOpenLoginModal} />} */}
     </>
   );
 }
