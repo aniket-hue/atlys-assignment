@@ -32,6 +32,7 @@ export function LoginButton() {
           signupModalRef.current?.open();
         }}
       />
+
       <SignupModal
         ref={signupModalRef}
         onLogin={() => {

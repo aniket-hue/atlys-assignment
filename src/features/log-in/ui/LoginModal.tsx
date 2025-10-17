@@ -6,18 +6,34 @@ import { Modal, ModalContent, ModalOverlay } from '@shared/ui/modal';
 import type { ModalRef } from '@shared/ui/modal/types';
 import { Slot } from '@shared/ui/slot';
 
-import { forwardRef, useState } from 'react';
+import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
+import { useAuth } from '@widgets/auth/model/ctx';
 
 export const LoginModal = forwardRef<ModalRef, { onSignup: () => void }>(({ onSignup }, ref) => {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const { login, ...rest } = useAuth();
 
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
+  const modalRef = useRef<ModalRef>(null);
+
+  useImperativeHandle(ref, () => modalRef.current!);
+
+  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUsername(e.target.value);
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
+  };
+
+  const handleLogin = () => {
+    try {
+      console.log(login);
+      login({ email: username, password, username });
+      modalRef.current?.close();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleSignup = () => {
@@ -25,7 +41,7 @@ export const LoginModal = forwardRef<ModalRef, { onSignup: () => void }>(({ onSi
   };
 
   return (
-    <Modal ref={ref}>
+    <Modal ref={modalRef}>
       <ModalOverlay />
       <ModalContent>
         {/* Header */}
@@ -42,7 +58,7 @@ export const LoginModal = forwardRef<ModalRef, { onSignup: () => void }>(({ onSi
               type="email"
               placeholder="Email or username"
               className="w-full mt-1"
-              onChange={handleEmailChange}
+              onChange={handleUsernameChange}
             />
           </div>
 
@@ -62,6 +78,7 @@ export const LoginModal = forwardRef<ModalRef, { onSignup: () => void }>(({ onSi
           type="button"
           className="w-full bg-violet-800 text-white py-2.5 rounded-lg font-medium 
           hover:bg-violet-900 transition-colors mt-4 text-xs cursor-pointer"
+          onClick={handleLogin}
         >
           Sign in
         </button>

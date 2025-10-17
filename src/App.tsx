@@ -7,13 +7,14 @@ import { SignupModal } from '@features/sign-up/ui/SignupModal';
 import { usePostList } from '@entities/posts';
 
 import { useNotImplemented } from '@shared/utils/hooks/useNotImplemented';
+import { AuthProvider } from '@widgets/auth';
 
 function App() {
   const { posts, isLoading } = usePostList();
   const { notImplemented } = useNotImplemented();
 
   return (
-    <>
+    <AuthProvider>
       <Header />
       <div className="flex flex-col items-center justify-center gap-4 max-w-[600px] mx-auto pb-4 pt-24 scrollbar-hide">
         <PostEditor />
@@ -36,7 +37,7 @@ function App() {
               ))}
         </div>
       </div>
-    </>
+    </AuthProvider>
   );
 }
 
