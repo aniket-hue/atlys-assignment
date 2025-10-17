@@ -2,7 +2,7 @@ import { cn } from '@shared/lib/cn';
 import { SlotOutlet, SlotProvider } from '@shared/ui/slot';
 
 import { useModal } from './ctx';
-import React, { type PropsWithChildren } from 'react';
+import type { PropsWithChildren } from 'react';
 
 function ModalContentInner({ children, className }: PropsWithChildren<{ className?: string }>) {
   const { isOpen } = useModal();

@@ -1,5 +1,4 @@
 import { useModal } from './ctx';
-import type { PropsWithChildren } from 'react';
 
 export function ModalOverlay() {
   const { setIsOpen } = useModal();

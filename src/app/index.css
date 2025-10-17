@@ -1,11 +1,13 @@
 @import "tailwindcss";
 
+/* biome-ignore lint/suspicious/noUnknownAtRules: Tailwind CSS directives */
 @theme {
   --color-snow: #f7f7f7;
 }
 
 @layer base {
   body {
+    /* biome-ignore lint/suspicious/noUnknownAtRules: Tailwind CSS directive */
     @apply bg-white;
   }
 

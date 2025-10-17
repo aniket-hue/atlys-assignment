@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/correctness/useUniqueElementIds: <explanation> */
+/** biome-ignore-all lint/correctness/useUniqueElementIds: Modal components intentionally reuse IDs */
 
 import { useAuth } from '@widgets/auth/model/ctx';
 
@@ -17,7 +17,7 @@ export const LoginModal = forwardRef<ModalRef, { onSignup: () => void }>(({ onSi
 
   const modalRef = useRef<ModalRef>(null);
 
-  useImperativeHandle(ref, () => modalRef.current!);
+  useImperativeHandle(ref, () => modalRef.current as ModalRef);
 
   const handleEmailChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);

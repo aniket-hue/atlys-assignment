@@ -11,7 +11,6 @@ import { SmileyIcon } from '@shared/icons/Smiley';
 import { UnderlineIcon } from '@shared/icons/UnderlineIcon';
 import VideoIcon from '@shared/icons/VideoIcon';
 import { cn } from '@shared/lib/cn';
-import { sleep } from '@shared/lib/sleep';
 import { useNotImplemented } from '@shared/utils/hooks/useNotImplemented';
 
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';

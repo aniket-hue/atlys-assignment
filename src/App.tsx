@@ -19,10 +19,10 @@ function App() {
 
         <div className="flex flex-wrap flex-col items-center justify-center gap-4 w-full ">
           {isLoading
-            ? Array.from({ length: 3 }).map((_, index) => <PostCardShimmer key={index} />)
+            ? Array.from({ length: 3 }, (_, index) => <PostCardShimmer key={`shimmer-${Date.now()}-${index}`} />)
             : posts.map((item, index) => (
                 <PostCard
-                  key={item.name + index}
+                  key={`post-${item.name}-${index}`}
                   content={item.content}
                   src={item.src}
                   name={item.name}
