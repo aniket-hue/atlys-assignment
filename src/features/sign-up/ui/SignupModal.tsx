@@ -8,7 +8,7 @@ import { Label } from '@shared/ui/Label';
 import { Modal, ModalContent, ModalOverlay, type ModalRef } from '@shared/ui/modal';
 import { Slot } from '@shared/ui/slot';
 
-import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
+import { forwardRef, useCallback, useImperativeHandle, useRef, useState } from 'react';
 
 export const SignupModal = forwardRef<ModalRef, { onLogin: () => void }>(({ onLogin }, ref) => {
   const [email, setEmail] = useState('');
@@ -21,23 +21,23 @@ export const SignupModal = forwardRef<ModalRef, { onLogin: () => void }>(({ onLo
 
   const { signup } = useAuth();
 
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleEmailChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
-  };
+  }, []);
 
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePasswordChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
-  };
+  }, []);
 
-  const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleConfirmPasswordChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setConfirmPassword(e.target.value);
-  };
+  }, []);
 
-  const handleLogin = () => {
+  const handleLogin = useCallback(() => {
     onLogin();
-  };
+  }, [onLogin]);
 
-  const handleSignup = () => {
+  const handleSignup = useCallback(() => {
     if (password !== confirmPassword) {
       throw new Error('Passwords do not match');
     }
@@ -56,7 +56,7 @@ export const SignupModal = forwardRef<ModalRef, { onLogin: () => void }>(({ onLo
     } catch (error) {
       console.error(error);
     }
-  };
+  }, [password, confirmPassword, email, signup]);
 
   return (
     <Modal ref={modalRef}>

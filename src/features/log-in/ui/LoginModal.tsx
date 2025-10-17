@@ -8,7 +8,7 @@ import { Modal, ModalContent, ModalOverlay } from '@shared/ui/modal';
 import type { ModalRef } from '@shared/ui/modal/types';
 import { Slot } from '@shared/ui/slot';
 
-import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
+import { forwardRef, useCallback, useImperativeHandle, useRef, useState } from 'react';
 
 export const LoginModal = forwardRef<ModalRef, { onSignup: () => void }>(({ onSignup }, ref) => {
   const [email, setEmail] = useState('');
@@ -19,26 +19,26 @@ export const LoginModal = forwardRef<ModalRef, { onSignup: () => void }>(({ onSi
 
   useImperativeHandle(ref, () => modalRef.current!);
 
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleEmailChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
-  };
+  }, []);
 
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePasswordChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
-  };
+  }, []);
 
-  const handleLogin = () => {
+  const handleLogin = useCallback(() => {
     try {
       login({ email, password });
       modalRef.current?.close();
     } catch (error) {
       console.error('Login failed:', error);
     }
-  };
+  }, [login, email, password]);
 
-  const handleSignup = () => {
+  const handleSignup = useCallback(() => {
     onSignup();
-  };
+  }, [onSignup]);
 
   return (
     <Modal ref={modalRef}>

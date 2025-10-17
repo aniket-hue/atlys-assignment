@@ -3,9 +3,10 @@ import { HeartIcon } from '@shared/icons/HeartIcon';
 import { SendIcon } from '@shared/icons/SendIcon';
 import { Avatar } from '@shared/ui/Avatar';
 
+import { memo } from 'react';
 import type React from 'react';
 
-function ActionButton({
+const ActionButton = memo(function ActionButton({
   icon: IconComponent,
   label,
   onClick,
@@ -24,7 +25,7 @@ function ActionButton({
       <IconComponent className="size-5.5 transition-all duration-200 ease-in-out filter group-hover:scale-110 group-hover:brightness-125" />
     </button>
   );
-}
+});
 
 interface PostCardProps {
   content: string;
@@ -38,7 +39,7 @@ interface PostCardProps {
   onSend: () => void;
 }
 
-export function PostCard(props: PostCardProps) {
+export const PostCard = memo(function PostCard(props: PostCardProps) {
   const { onLike, onComment, onSend } = props;
 
   return (
@@ -67,4 +68,4 @@ export function PostCard(props: PostCardProps) {
       </div>
     </div>
   );
-}
+});

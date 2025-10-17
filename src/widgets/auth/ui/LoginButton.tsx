@@ -3,25 +3,35 @@ import { SignupModal } from '@features/sign-up';
 
 import type { ModalRef } from '@shared/ui/modal';
 
-import { useRef } from 'react';
+import { memo, useCallback, useRef } from 'react';
 import { useAuth } from '../model/ctx';
 
-export function LoginButton() {
+export const LoginButton = memo(function LoginButton() {
   const { logout, user } = useAuth();
   const loginModalRef = useRef<ModalRef>(null);
   const signupModalRef = useRef<ModalRef>(null);
 
-  function handleAction() {
+  const handleAction = useCallback(() => {
     if (user) {
       logout();
     } else {
       loginModalRef.current?.open();
     }
-  }
+  }, [user, logout]);
 
-  function handleOpenLoginModal() {
+  const handleOpenLoginModal = useCallback(() => {
     loginModalRef.current?.open();
-  }
+  }, []);
+
+  const handleSignup = useCallback(() => {
+    loginModalRef.current?.close();
+    signupModalRef.current?.open();
+  }, []);
+
+  const handleLogin = useCallback(() => {
+    signupModalRef.current?.close();
+    loginModalRef.current?.open();
+  }, []);
 
   return (
     <>
@@ -29,23 +39,11 @@ export function LoginButton() {
         {user ? 'Logout' : 'Login'}
       </button>
 
-      <LoginModal
-        ref={loginModalRef}
-        onSignup={() => {
-          loginModalRef.current?.close();
-          signupModalRef.current?.open();
-        }}
-      />
+      <LoginModal ref={loginModalRef} onSignup={handleSignup} />
 
-      <SignupModal
-        ref={signupModalRef}
-        onLogin={() => {
-          signupModalRef.current?.close();
-          loginModalRef.current?.open();
-        }}
-      />
+      <SignupModal ref={signupModalRef} onLogin={handleLogin} />
 
       {!user && <div role="button" tabIndex={-1} className="fixed inset-0 z-[50]" onClick={handleOpenLoginModal} />}
     </>
   );
-}
+});

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 import { cn } from '../lib/cn';
 
 interface AvatarProps {
@@ -21,17 +21,19 @@ const soothingColors = [
   '#F1948A',
 ];
 
-export function Avatar({ src, name, className }: AvatarProps) {
+export const Avatar = memo(function Avatar({ src, name, className }: AvatarProps) {
   const [isImageLoaded, setIsImageLoaded] = useState(false);
 
-  function handleLoad() {
+  const handleLoad = useCallback(() => {
     setIsImageLoaded(true);
-  }
+  }, []);
 
-  const initials = name
-    .split(' ')
-    .map((word) => word[0])
-    .join('');
+  const initials = useMemo(() => {
+    return name
+      .split(' ')
+      .map((word) => word[0])
+      .join('');
+  }, [name]);
 
   const randomColor = useMemo(() => {
     return soothingColors[Math.floor(Math.random() * soothingColors.length)];
@@ -51,4 +53,4 @@ export function Avatar({ src, name, className }: AvatarProps) {
       )}
     </div>
   );
-}
+});

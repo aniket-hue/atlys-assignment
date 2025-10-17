@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { getPost } from '../api/getPost';
 import { createPost, type CreatePostData } from '../api/createPost';
 import type { Post } from '../types';
@@ -12,7 +12,7 @@ export function usePostList() {
     fetchPosts();
   }, []);
 
-  async function fetchPosts() {
+  const fetchPosts = useCallback(async () => {
     setIsLoading(true);
 
     try {
@@ -23,9 +23,9 @@ export function usePostList() {
     } finally {
       setIsLoading(false);
     }
-  }
+  }, []);
 
-  async function addPost(data: CreatePostData) {
+  const addPost = useCallback(async (data: CreatePostData) => {
     try {
       /**
        * Backend call to create a new post and optimistic update the UI
@@ -36,7 +36,7 @@ export function usePostList() {
     } catch (error) {
       setError(error as Error);
     }
-  }
+  }, []);
 
   return { posts, isLoading, error, addPost };
 }

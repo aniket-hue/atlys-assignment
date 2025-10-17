@@ -10,28 +10,38 @@ import VideoIcon from '@shared/icons/VideoIcon';
 import { cn } from '@shared/lib/cn';
 import { useNotImplemented } from '@shared/utils/hooks/useNotImplemented';
 
-import { useEffect, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { CreatePostData } from '@entities/posts/api/createPost';
 
-const EditorButton = ({ icon: Icon, isActive, onClick }: { icon: any; isActive: boolean; onClick: () => void }) => {
-  return (
-    <button
-      type="button"
-      className={`rounded transition-all duration-150 cursor-pointer p-0.5 ${
-        !isActive ? 'hover:bg-gray-200 active:scale-95' : 'bg-white'
-      }`}
-      onClick={onClick}
-    >
-      <Icon className="w-5 h-5" />
-    </button>
-  );
-};
+const EditorButton = memo(
+  ({
+    icon: Icon,
+    isActive,
+    onClick,
+  }: {
+    icon: React.ComponentType<{ className?: string }>;
+    isActive: boolean;
+    onClick: () => void;
+  }) => {
+    return (
+      <button
+        type="button"
+        className={`rounded transition-all duration-150 cursor-pointer p-0.5 ${
+          !isActive ? 'hover:bg-gray-200 active:scale-95' : 'bg-white'
+        }`}
+        onClick={onClick}
+      >
+        <Icon className="w-5 h-5" />
+      </button>
+    );
+  },
+);
 
 interface PostEditorProps {
   onAddPost?: (data: CreatePostData) => void;
 }
 
-export function PostEditor({ onAddPost }: PostEditorProps) {
+export const PostEditor = memo(function PostEditor({ onAddPost }: PostEditorProps) {
   const [format, setFormat] = useState<'bold' | 'italic' | 'underline' | null>(null);
   const [listType, setListType] = useState<'ordered' | 'unordered' | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -41,13 +51,13 @@ export function PostEditor({ onAddPost }: PostEditorProps) {
 
   const editorRef = useRef<HTMLDivElement>(null);
 
-  function handleClick(e: MouseEvent) {
+  const handleClick = useCallback((e: MouseEvent) => {
     if (e.target instanceof Node && editorRef.current?.contains(e.target)) {
       setIsExpanded(true);
     } else {
       setIsExpanded(false);
     }
-  }
+  }, []);
 
   useEffect(() => {
     document.addEventListener('click', handleClick);
@@ -55,9 +65,9 @@ export function PostEditor({ onAddPost }: PostEditorProps) {
     return () => {
       document.removeEventListener('click', handleClick);
     };
-  }, [isExpanded]);
+  }, [handleClick]);
 
-  function handleSubmit() {
+  const handleSubmit = useCallback(() => {
     if (!content.trim() || !onAddPost) {
       return;
     }
@@ -65,14 +75,38 @@ export function PostEditor({ onAddPost }: PostEditorProps) {
     onAddPost({ content: content.trim() });
     setContent('');
     setIsExpanded(false);
-  }
+  }, [content, onAddPost]);
 
-  function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
-    if (e.key === 'Enter' && e.shiftKey) {
-      e.preventDefault();
-      handleSubmit();
-    }
-  }
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+      if (e.key === 'Enter' && e.shiftKey) {
+        e.preventDefault();
+        handleSubmit();
+      }
+    },
+    [handleSubmit],
+  );
+
+  const handleContentChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setContent(e.target.value);
+  }, []);
+
+  const formatHandlers = useMemo(
+    () => ({
+      bold: () => setFormat(format === 'bold' ? null : 'bold'),
+      italic: () => setFormat(format === 'italic' ? null : 'italic'),
+      underline: () => setFormat(format === 'underline' ? null : 'underline'),
+    }),
+    [format],
+  );
+
+  const listHandlers = useMemo(
+    () => ({
+      unordered: () => setListType(listType === 'unordered' ? null : 'unordered'),
+      ordered: () => setListType(listType === 'ordered' ? null : 'ordered'),
+    }),
+    [listType],
+  );
 
   return (
     <div className="bg-gray-50 rounded-3xl p-2 w-full max-w-2xl mx-auto" ref={editorRef}>
@@ -91,37 +125,17 @@ export function PostEditor({ onAddPost }: PostEditorProps) {
         >
           <div className="overflow-hidden">
             <div className="flex items-center bg-gray-100 rounded-lg w-fit p-1 gap-2 ml-3 mt-3 mb-4">
-              <EditorButton
-                isActive={format === 'bold'}
-                icon={BoldIcon}
-                onClick={() => setFormat(format === 'bold' ? null : 'bold')}
-              />
+              <EditorButton isActive={format === 'bold'} icon={BoldIcon} onClick={formatHandlers.bold} />
 
-              <EditorButton
-                isActive={format === 'italic'}
-                icon={ItalicIcon}
-                onClick={() => setFormat(format === 'italic' ? null : 'italic')}
-              />
+              <EditorButton isActive={format === 'italic'} icon={ItalicIcon} onClick={formatHandlers.italic} />
 
-              <EditorButton
-                isActive={format === 'underline'}
-                icon={UnderlineIcon}
-                onClick={() => setFormat(format === 'underline' ? null : 'underline')}
-              />
+              <EditorButton isActive={format === 'underline'} icon={UnderlineIcon} onClick={formatHandlers.underline} />
 
               <div className="w-px h-5 bg-gray-200" />
 
-              <EditorButton
-                isActive={listType === 'unordered'}
-                icon={BulletsIcon}
-                onClick={() => setListType(listType === 'unordered' ? null : 'unordered')}
-              />
+              <EditorButton isActive={listType === 'unordered'} icon={BulletsIcon} onClick={listHandlers.unordered} />
 
-              <EditorButton
-                isActive={listType === 'ordered'}
-                icon={BulletsIcon}
-                onClick={() => setListType(listType === 'ordered' ? null : 'ordered')}
-              />
+              <EditorButton isActive={listType === 'ordered'} icon={BulletsIcon} onClick={listHandlers.ordered} />
             </div>
           </div>
         </div>
@@ -138,7 +152,7 @@ export function PostEditor({ onAddPost }: PostEditorProps) {
             )}
             placeholder="What's on your mind?"
             value={content}
-            onChange={(e) => setContent(e.target.value)}
+            onChange={handleContentChange}
             onKeyDown={handleKeyDown}
           />
         </div>
@@ -183,4 +197,4 @@ export function PostEditor({ onAddPost }: PostEditorProps) {
       </div>
     </div>
   );
-}
+});

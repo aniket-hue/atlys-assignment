@@ -1,6 +1,6 @@
 import { validateEmail, validatePassword } from '@shared/lib/validate';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { AuthContext } from '../model/ctx';
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -27,53 +27,60 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  const login = ({ email, password }: { email: string; password: string }) => {
-    const user = mockDb.find((user) => user.email === email && user.password === password);
+  const login = useCallback(
+    ({ email, password }: { email: string; password: string }) => {
+      const user = mockDb.find((user) => user.email === email && user.password === password);
 
-    if (!user) {
-      throw new Error('Invalid credentials');
-    }
+      if (!user) {
+        throw new Error('Invalid credentials');
+      }
 
-    if (!validateEmail(email)) {
-      throw new Error('Invalid email');
-    }
+      if (!validateEmail(email)) {
+        throw new Error('Invalid email');
+      }
 
-    localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('user', JSON.stringify(user));
 
-    setUser({ email });
-  };
-
-  const signup = ({ email, password }: { email: string; password: string }) => {
-    if (!validateEmail(email)) {
-      throw new Error('Invalid email');
-    }
-
-    if (!validatePassword(password)) {
-      throw new Error('Invalid password');
-    }
-
-    if (mockDb.find((user) => user.email === email)) {
-      throw new Error('Email already exists');
-    }
-
-    const finalNewUser = { email, password };
-
-    setMockDb((prev) => [...prev, finalNewUser]);
-  };
-
-  return (
-    <AuthContext.Provider
-      value={{
-        user,
-        signup,
-        login,
-        logout: () => {
-          localStorage.removeItem('user');
-          setUser(null);
-        },
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
+      setUser({ email });
+    },
+    [mockDb],
   );
+
+  const signup = useCallback(
+    ({ email, password }: { email: string; password: string }) => {
+      if (!validateEmail(email)) {
+        throw new Error('Invalid email');
+      }
+
+      if (!validatePassword(password)) {
+        throw new Error('Invalid password');
+      }
+
+      if (mockDb.find((user) => user.email === email)) {
+        throw new Error('Email already exists');
+      }
+
+      const finalNewUser = { email, password };
+
+      setMockDb((prev) => [...prev, finalNewUser]);
+    },
+    [mockDb],
+  );
+
+  const logout = useCallback(() => {
+    localStorage.removeItem('user');
+    setUser(null);
+  }, []);
+
+  const contextValue = useMemo(
+    () => ({
+      user,
+      signup,
+      login,
+      logout,
+    }),
+    [user, signup, login, logout],
+  );
+
+  return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
 }
