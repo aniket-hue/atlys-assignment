@@ -1,5 +1,5 @@
-import { type PropsWithChildren, useEffect } from 'react';
 import { useSlots } from './ctx';
+import { type PropsWithChildren, useEffect } from 'react';
 
 export function Slot({ name, children }: PropsWithChildren<{ name: string }>) {
   const { registerSlot, unregisterSlot } = useSlots();

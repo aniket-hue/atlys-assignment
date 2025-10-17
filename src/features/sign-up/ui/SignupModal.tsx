@@ -2,12 +2,12 @@
 
 import { Input } from '@shared/ui/input';
 import { Label } from '@shared/ui/Label';
-import { Modal, ModalContent, ModalOverlay } from '@shared/ui/modal';
+import { Modal, ModalContent, ModalOverlay, type ModalRef } from '@shared/ui/modal';
 import { Slot } from '@shared/ui/slot';
 
-import { useState } from 'react';
+import { forwardRef, type PropsWithChildren, useState } from 'react';
 
-export function SignupModal() {
+export const SignupModal = forwardRef<ModalRef, PropsWithChildren>(({ children }, ref) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -25,7 +25,7 @@ export function SignupModal() {
   };
 
   return (
-    <Modal>
+    <Modal ref={ref}>
       <ModalOverlay />
       <ModalContent>
         {/* Header */}
@@ -87,4 +87,4 @@ export function SignupModal() {
       </ModalContent>
     </Modal>
   );
-}
+});

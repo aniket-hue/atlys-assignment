@@ -1,7 +1,8 @@
 import { Header } from '@widgets/header';
 import { PostCard, PostCardShimmer } from '@widgets/post-list';
 import { PostEditor } from '@widgets/post-list-editor';
-import { SignupModal } from '@widgets/sign-up/ui/SignupModal';
+
+import { SignupModal } from '@features/sign-up/ui/SignupModal';
 
 import { usePostList } from '@entities/posts';
 
@@ -35,8 +36,6 @@ function App() {
               ))}
         </div>
       </div>
-
-      <SignupModal />
     </>
   );
 }
