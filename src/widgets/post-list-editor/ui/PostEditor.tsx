@@ -12,6 +12,8 @@ import { useNotImplemented } from '@shared/utils/hooks/useNotImplemented';
 
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { CreatePostData } from '@entities/posts/api/createPost';
+import OrderedListIcon from '@shared/icons/OrderedListIcon';
+import { sleep } from '@shared/lib/sleep';
 
 const EditorButton = memo(
   ({
@@ -91,21 +93,31 @@ export const PostEditor = memo(function PostEditor({ onAddPost }: PostEditorProp
     setContent(e.target.value);
   }, []);
 
+  const handleSetFormat = useCallback((format: 'bold' | 'italic' | 'underline') => {
+    setFormat(format);
+    notImplemented();
+  }, []);
+
+  const handleSetListType = useCallback((listType: 'ordered' | 'unordered') => {
+    setListType(listType);
+    notImplemented();
+  }, []);
+
   const formatHandlers = useMemo(
     () => ({
-      bold: () => setFormat(format === 'bold' ? null : 'bold'),
-      italic: () => setFormat(format === 'italic' ? null : 'italic'),
-      underline: () => setFormat(format === 'underline' ? null : 'underline'),
+      bold: () => handleSetFormat('bold'),
+      italic: () => handleSetFormat('italic'),
+      underline: () => handleSetFormat('underline'),
     }),
-    [format],
+    [handleSetFormat],
   );
 
   const listHandlers = useMemo(
     () => ({
-      unordered: () => setListType(listType === 'unordered' ? null : 'unordered'),
-      ordered: () => setListType(listType === 'ordered' ? null : 'ordered'),
+      unordered: () => handleSetListType('unordered'),
+      ordered: () => handleSetListType('ordered'),
     }),
-    [listType],
+    [handleSetListType],
   );
 
   return (
@@ -135,13 +147,15 @@ export const PostEditor = memo(function PostEditor({ onAddPost }: PostEditorProp
 
               <EditorButton isActive={listType === 'unordered'} icon={BulletsIcon} onClick={listHandlers.unordered} />
 
-              <EditorButton isActive={listType === 'ordered'} icon={BulletsIcon} onClick={listHandlers.ordered} />
+              <EditorButton isActive={listType === 'ordered'} icon={OrderedListIcon} onClick={listHandlers.ordered} />
             </div>
           </div>
         </div>
 
         <div className="flex gap-2 px-3 py-2">
-          <SmileyIcon className="w-5 h-5 text-gray-400 flex-shrink-0" />
+          <button className="w-5 h-5 text-gray-400 cursor-pointer" type="button" onClick={notImplemented}>
+            <SmileyIcon width={20} height={20} />
+          </button>
           <textarea
             className={cn(
               'flex-1 w-full resize-none outline-none text-sm placeholder-gray-400 bg-transparent transition-all duration-300',
