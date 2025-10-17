@@ -1,4 +1,5 @@
 import { LoginModal } from '@features/log-in';
+import { SignupModal } from '@features/sign-up';
 
 import type { ModalRef } from '@shared/ui/modal';
 
@@ -24,7 +25,20 @@ export function LoginButton() {
         {user ? 'Back to home' : 'Login'}
       </button>
 
-      <LoginModal ref={loginModalRef} />
+      <LoginModal
+        ref={loginModalRef}
+        onSignup={() => {
+          loginModalRef.current?.close();
+          signupModalRef.current?.open();
+        }}
+      />
+      <SignupModal
+        ref={signupModalRef}
+        onLogin={() => {
+          signupModalRef.current?.close();
+          loginModalRef.current?.open();
+        }}
+      />
     </>
   );
 }

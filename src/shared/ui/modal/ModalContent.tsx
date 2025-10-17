@@ -11,7 +11,7 @@ function ModalContentInner({ children, className }: PropsWithChildren<{ classNam
     <div className={cn('bg-gray-50 rounded-4xl p-2 w-full mx-auto z-10 relative shadow-md max-w-fit')}>
       <div
         className={cn(
-          'rounded-3xl bg-white w-full border border-gray-200 group z-10 relative',
+          'rounded-3xl bg-white w-full border border-gray-200 group z-10 relative min-w-[410px]',
           'text-gray-800 shadow-sm transition-all duration-300 px-12 pt-16 pb-10',
           {
             'opacity-0 scale-95': !isOpen,

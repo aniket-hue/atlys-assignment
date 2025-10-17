@@ -5,9 +5,9 @@ import { Label } from '@shared/ui/Label';
 import { Modal, ModalContent, ModalOverlay, type ModalRef } from '@shared/ui/modal';
 import { Slot } from '@shared/ui/slot';
 
-import { forwardRef, type PropsWithChildren, useState } from 'react';
+import { forwardRef, useState } from 'react';
 
-export const SignupModal = forwardRef<ModalRef, PropsWithChildren>(({ children }, ref) => {
+export const SignupModal = forwardRef<ModalRef, { onLogin: () => void }>(({ onLogin }, ref) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -22,6 +22,10 @@ export const SignupModal = forwardRef<ModalRef, PropsWithChildren>(({ children }
 
   const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setConfirmPassword(e.target.value);
+  };
+
+  const handleLogin = () => {
+    onLogin();
   };
 
   return (
@@ -80,7 +84,10 @@ export const SignupModal = forwardRef<ModalRef, PropsWithChildren>(({ children }
         <Slot name="footer">
           <div className="py-2">
             <p className="text-xs text-neutral-600 text-center">
-              Already have an account? <span className="text-violet-800 cursor-pointer">Log in</span>
+              Already have an account?{' '}
+              <span role="button" tabIndex={-1} className="text-violet-800 cursor-pointer" onClick={handleLogin}>
+                Log in
+              </span>
             </p>
           </div>
         </Slot>
