@@ -2,6 +2,7 @@
 
 import { useAuth } from '@widgets/auth/model/ctx';
 
+import LoginIcon from '@shared/icons/LoginIcon';
 import { validateEmail, validatePassword } from '@shared/lib/validate';
 import { Input } from '@shared/ui/input';
 import { Label } from '@shared/ui/Label';
@@ -64,6 +65,7 @@ export const SignupModal = forwardRef<ModalRef, { onLogin: () => void }>(({ onLo
       <ModalContent>
         {/* Header */}
         <div className="text-center">
+          <LoginIcon className="w-7 h-7 mb-5 mx-auto text-neutral-800" />
           <p className="text-base font-semibold mb-1 text-neutral-800">Create an account or log in to continue</p>
           <p className="text-xs text-neutral-600">Create an account to access all the features on the app</p>
         </div>

@@ -8,11 +8,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [mockDb, setMockDb] = useState<{ email: string; password: string }[]>([
     {
       email: 'demo@example.com',
-      password: '123456',
+      password: 'password123',
     },
     {
       email: 'test@example.com',
-      password: '123456',
+      password: 'testpass',
     },
   ]);
 
