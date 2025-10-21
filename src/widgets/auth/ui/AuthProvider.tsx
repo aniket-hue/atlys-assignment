@@ -62,6 +62,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       const finalNewUser = { email, password };
 
+      console.log('finalNewUser', finalNewUser);
+
       setMockDb((prev) => [...prev, finalNewUser]);
     },
     [mockDb],

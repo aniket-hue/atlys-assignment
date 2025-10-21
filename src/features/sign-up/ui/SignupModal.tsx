@@ -38,26 +38,31 @@ export const SignupModal = forwardRef<ModalRef, { onLogin: () => void }>(({ onLo
     onLogin();
   }, [onLogin]);
 
-  const handleSignup = useCallback(() => {
-    if (password !== confirmPassword) {
-      throw new Error('Passwords do not match');
-    }
+  const handleSignup = useCallback(
+    (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
 
-    if (!validateEmail(email)) {
-      throw new Error('Invalid email');
-    }
+      if (password !== confirmPassword) {
+        throw new Error('Passwords do not match');
+      }
 
-    if (!validatePassword(password)) {
-      throw new Error('Invalid password');
-    }
+      if (!validateEmail(email)) {
+        throw new Error('Invalid email');
+      }
 
-    try {
-      signup({ email, password });
-      modalRef.current?.close();
-    } catch (error) {
-      console.error(error);
-    }
-  }, [password, confirmPassword, email, signup]);
+      if (!validatePassword(password)) {
+        throw new Error('Invalid password');
+      }
+
+      try {
+        signup({ email, password });
+        modalRef.current?.close();
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    [password, confirmPassword, email, signup],
+  );
 
   return (
     <Modal ref={modalRef}>
@@ -70,49 +75,50 @@ export const SignupModal = forwardRef<ModalRef, { onLogin: () => void }>(({ onLo
           <p className="text-xs text-neutral-600">Create an account to access all the features on the app</p>
         </div>
 
-        <div className="flex flex-col gap-4 mt-8">
-          <div>
-            <Label htmlFor="email">Email or username</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="Email or username"
-              className="w-full mt-1"
-              onChange={handleEmailChange}
-            />
+        <form onSubmit={handleSignup}>
+          <div className="flex flex-col gap-4 mt-8">
+            <div>
+              <Label htmlFor="email">Email or username</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="Email or username"
+                className="w-full mt-1"
+                onChange={handleEmailChange}
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                placeholder="Enter your password"
+                className="w-full mt-1"
+                onChange={handlePasswordChange}
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="confirm-password">Confirm Password</Label>
+              <Input
+                id="confirm-password"
+                type="password"
+                placeholder="Re-enter your password"
+                className="w-full mt-1"
+                onChange={handleConfirmPasswordChange}
+              />
+            </div>
           </div>
 
-          <div>
-            <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              type="password"
-              placeholder="Enter your password"
-              className="w-full mt-1"
-              onChange={handlePasswordChange}
-            />
-          </div>
-
-          <div>
-            <Label htmlFor="confirm-password">Confirm Password</Label>
-            <Input
-              id="confirm-password"
-              type="password"
-              placeholder="Re-enter your password"
-              className="w-full mt-1"
-              onChange={handleConfirmPasswordChange}
-            />
-          </div>
-        </div>
-
-        <button
-          type="button"
-          className="w-full bg-violet-800 text-white py-2.5 rounded-lg font-medium 
+          <button
+            type="submit"
+            className="w-full bg-violet-800 text-white py-2.5 rounded-lg font-medium 
           hover:bg-violet-900 transition-colors mt-4 text-xs cursor-pointer"
-          onClick={handleSignup}
-        >
-          Create Account
-        </button>
+          >
+            Create Account
+          </button>
+        </form>
 
         <Slot name="footer">
           <div className="py-2">

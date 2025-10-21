@@ -57,7 +57,7 @@ export const PostCard = memo(function PostCard(props: PostCardProps) {
           <div className="bg-gray-200 rounded-full flex items-center justify-center size-7 shrink-0 text-lg">
             {props.emoji}
           </div>
-          <p className="flex-1 text-sm text-gray-700">{props.content}</p>
+          <p className="flex-1 text-sm text-gray-700 whitespace-break-spaces">{props.content}</p>
         </div>
       </div>
 

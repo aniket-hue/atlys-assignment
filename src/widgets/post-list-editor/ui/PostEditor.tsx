@@ -183,7 +183,7 @@ export const PostEditor = memo(function PostEditor({ onAddPost }: PostEditorProp
             <div
               role="button"
               tabIndex={-1}
-              className="flex items-center p-3 h-10 gap-3 cursor-pointer"
+              className="flex items-center p-3 h-10 gap-3 cursor-pointer w-fit"
               onClick={notImplemented}
             >
               <PlusIcon className="text-neutral-500" width={16} height={16} />

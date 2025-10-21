@@ -28,14 +28,19 @@ export const LoginModal = forwardRef<ModalRef, { onSignup: () => void }>(({ onSi
     setPassword(e.target.value);
   }, []);
 
-  const handleLogin = useCallback(() => {
-    try {
-      login({ email, password });
-      modalRef.current?.close();
-    } catch (error) {
-      console.error('Login failed:', error);
-    }
-  }, [login, email, password]);
+  const handleLogin = useCallback(
+    (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+
+      try {
+        login({ email, password });
+        modalRef.current?.close();
+      } catch (error) {
+        console.error('Login failed:', error);
+      }
+    },
+    [login, email, password],
+  );
 
   const handleSignup = useCallback(() => {
     onSignup();
@@ -52,38 +57,39 @@ export const LoginModal = forwardRef<ModalRef, { onSignup: () => void }>(({ onSi
           <p className="text-xs text-neutral-600">Sign in to access all the features on the app</p>
         </div>
 
-        <div className="flex flex-col gap-4 mt-8">
-          <div>
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="Enter your email"
-              className="w-full mt-1"
-              onChange={handleEmailChange}
-            />
+        <form onSubmit={handleLogin}>
+          <div className="flex flex-col gap-4 mt-8">
+            <div>
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="Enter your email"
+                className="w-full mt-1"
+                onChange={handleEmailChange}
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                placeholder="Enter your password"
+                className="w-full mt-1"
+                onChange={handlePasswordChange}
+              />
+            </div>
           </div>
 
-          <div>
-            <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              type="password"
-              placeholder="Enter your password"
-              className="w-full mt-1"
-              onChange={handlePasswordChange}
-            />
-          </div>
-        </div>
-
-        <button
-          type="button"
-          className="w-full bg-violet-800 text-white py-2.5 rounded-lg font-medium 
+          <button
+            type="submit"
+            className="w-full bg-violet-800 text-white py-2.5 rounded-lg font-medium 
           hover:bg-violet-900 transition-colors mt-4 text-xs cursor-pointer"
-          onClick={handleLogin}
-        >
-          Sign in
-        </button>
+          >
+            Sign in
+          </button>
+        </form>
 
         <Slot name="footer">
           <div className="py-2">
